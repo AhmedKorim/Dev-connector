@@ -1,6 +1,8 @@
 const express = require('express');
 const passport = require('passport');
-const validateeProfileInput = require('../../validation/profile');
+const validateProfileInput = require('../../validation/profile');
+const validateExpInput = require('../../validation/experience');
+const validateEduInput = require('../../validation/education');
 
 // models
 // => User
@@ -22,8 +24,8 @@ router.get('/current', (req, res, next) => {
 
 router.get('/all', (req, res, next) => {
     const errors = {};
-    Profile.find({})
-        .populate("User", ['name', 'avatar'])
+    Profile.find()
+    // .populate("User", ['name', 'avatar'])
         .then(profiles => {
             if (!profiles) {
                 errors.profiles = "no profiles found";
@@ -54,7 +56,7 @@ router.get("/handle/:handle", (req, res, next) => {
     const {handle} = req.params;
     const errors = {};
     Profile.findOne({handle})
-        .populate("user", ["name", "avatar"])
+        .populate("User", ["name", "avatar"])
         .then(profile => {
             if (!profile) {
                 error.noProfile = "there is no profile found"
@@ -79,7 +81,7 @@ router.get("/user/:user_id", (req, res, next) => {
     const {user_id} = req.params;
     const errors = {};
     Profile.findOne({user: user_id})
-        .populate("user", ["name", "avatar"])
+        .populate("User", ["name", "avatar"])
         .then(profile => {
             if (!profile) {
                 error.noProfile = "there is no profile found"
@@ -104,7 +106,7 @@ router.get('/', passport.authenticate("jwt", {session: false}), (req, res, next)
     const user = req.user;
     const errors = {};
     Profile.findOne({user: user.id})
-        .populate("user", ['name', "avatar"])
+        .populate("User", ['name', "avatar"])
         .then(profile => {
             if (!profile) {
                 errors.noProfile = "there is no profile for this user";
@@ -127,7 +129,7 @@ router.get('/', passport.authenticate("jwt", {session: false}), (req, res, next)
 router.post('/', passport.authenticate("jwt", {session: false}), (req, res, next) => {
     //getting all fields
     const profileFields = {}
-    const {errors, isValid} = validateeProfileInput(req.body);
+    const {errors, isValid} = validateProfileInput(req.body);
 
     if (!isValid) {
         return res.status(400)
@@ -196,5 +198,126 @@ router.post('/', passport.authenticate("jwt", {session: false}), (req, res, next
 
 })
 
+//@route post api/profile/experience
+//@desc add an experience
+// private
+router.post('/experience', passport.authenticate("jwt", {session: false}), (req, res) => {
+    const {errors, isValid} = validateExpInput(req.body);
+    if (!isValid) {
+        return res.status(400).json({errors})
+    }
 
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            if (profile) {
+                const newExp = {
+                    title: req.body.title,
+                    company: req.body.company,
+                    location: req.body.location,
+                    from: req.body.from,
+                    to: req.body.to,
+                    current: req.body.current,
+                    description: req.body.description
+                }
+                // add to experiance array
+                profile.experience.unshift(newExp);
+                profile.save()
+                    .then(profile => {
+                        res.status(200)
+                            .json({profile: profile})
+                    })
+            }
+        })
+});
+
+//@route post api/profile/education
+//@desc add an experience
+// private
+router.post('/education', passport.authenticate("jwt", {session: false}), (req, res) => {
+    const {errors, isValid} = validateEduInput(req.body);
+    if (!isValid) {
+        return res.status(400).json({errors})
+    }
+
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            if (profile) {
+                const newEdu = {
+                    school: req.body.school,
+                    degree: req.body.degree,
+                    fieldOfStudy: req.body.fieldOfStudy,
+                    from: req.body.from,
+                    to: req.body.to,
+                    current: req.body.current,
+                    description: req.body.description
+                }
+                // add to experiance array
+                profile.education.unshift(newEdu);
+                profile.save()
+                    .then(profile => {
+                        res.status(200)
+                            .json({profile: profile})
+                    })
+            }
+        })
+});
+
+
+//@route delete api/profile/experience/:exp_id
+//@desc delete an experience
+// private
+router.delete('/experience/:exp_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const exp_id = req.params.exp_id;
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            const removeIndex = profile.experience.map(item => item.id)
+                .indexOf(exp_id);
+            // item exists
+
+            if (removeIndex >= 0) {
+                profile.experience = profile.experience.filter(exp => exp.id !== exp_id);
+                profile.save()
+                    .then(profile => res.status(200).json({
+                        message: 'profile updated',
+                        profile: profile
+                    }))
+                    .catch(err => res.status(400).json({errors: "failed to update the profile"}))
+            } else {
+                res.status(404)
+                    .json({
+                        message: 'experience dosn\'t exist'
+                    })
+            }
+        })
+
+})
+
+
+//@route delete api/profile/education/:exp_id
+//@desc add an education
+// private
+router.delete('/education/:edu_id', passport.authenticate('jwt', {session: false}), (req, res) => {
+    const edu_id = req.params.edu_id;
+    Profile.findOne({user: req.user.id})
+        .then(profile => {
+            const removeIndex = profile.education.map(item => item.id)
+                .indexOf(edu_id);
+            // item exists?
+            if (removeIndex >= 0) {
+                profile.education = profile.education.filter(edu => edu.id !== edu_id);
+                profile.save()
+                    .then(profile => res.status(200).json({
+                        message: 'profile updated',
+                        profile: profile
+                    }))
+                    .catch(err => res.status(400).json({errors: "failed to update the profile"}))
+            } else {
+                res.status(404)
+                    .json({
+                        message: 'education  dosn\'t exist'
+                    })
+            }
+        })
+
+})
 module.exports = router;
