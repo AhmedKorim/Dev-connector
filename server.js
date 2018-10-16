@@ -6,7 +6,7 @@ const passport = require('passport');
 // routes files
 const user = require('./routes/api/user');
 const post = require('./routes/api/post');
-const prfile = require('./routes/api/prfile');
+const prfile = require('./routes/api/profile');
 const bodyParser = require('body-parser');
 
 

@@ -8,6 +8,9 @@ const passport = require('passport');
 const User = require('../../models/User');
 const router = express.Router();
 const {secretOrKey} = require('../../config/keys');
+// input validation
+const validateRegisterInput = require('../../validation/register');
+const validateLoginInput = require('../../validation/login');
 /*
 * @route GET api/user/test
 * @desc  Tests user route
@@ -23,13 +26,21 @@ router.get('/test', (req, res, next) => {
 * @desc  Tests user route
 * */
 router.post('/register', (req, res, next) => {
+    const {errors, isValid} = validateRegisterInput(req.body);
+    // check validation
+    if (!isValid) {
+        return res.status(400)
+            .json({message: 'incorrect input ', errors})
+    }
+
     User.findOne({email: req.body.email})
     // it will always return [] or [{},{}] with users
         .then(doc => {
             if (doc) {
+                errors.email = "Email already exists"
                 return res.status(400)
                     .json({
-                        email: "Email already exists"
+                        errors
                     })
             } else {
                 //var url = gravatar.url('emerleite@gmail.com', {s: '200', r: 'pg', d: '404'});
@@ -74,16 +85,27 @@ router.post('/register', (req, res, next) => {
 * */
 
 router.post('/login', (req, res,) => {
+    const {errors, isValid} = validateLoginInput(req.body);
+
+
     const {email, password} = req.body;
     // find the uer by email
+    if (!isValid) {
+        return res.status(400)
+            .json({
+                message: "login failed",
+                error: errors
+            })
+    }
     User.findOne({email})
         .then(user => {
             // if user is there
-
             if (!user) {
+                errors.email = "Email not found"
                 return res.status(404)
                     .json({
-                        message: "Email not found"
+                        message: "Email not found",
+                        error: errors
                     })
             }
             // check the password
@@ -94,7 +116,7 @@ router.post('/login', (req, res,) => {
                         // user matched
                         // jwt paylaod
                         const payload = {
-                            id: user._id,
+                            id: user.id,
                             name: user.name,
                             email: user.email,
                             avatar: user.avatar
@@ -107,6 +129,7 @@ router.post('/login', (req, res,) => {
                                     .json({
                                         message: "login success",
                                         user: {
+                                            id: user._id,
                                             userName: user.name,
                                             avatar: user.avatar
                                         },
@@ -115,8 +138,9 @@ router.post('/login', (req, res,) => {
                             });
 
                     } else {
+                        errors.password = "password incorrect";
                         return res.status(400)
-                            .json({message: "password incorrect"})
+                            .json({errors})
                     }
                 })
         }).catch(err => {
