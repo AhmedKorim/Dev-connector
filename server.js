@@ -5,14 +5,19 @@ const mongoose = require('mongoose');
 const user = require('./routes/api/user');
 const post = require('./routes/api/post');
 const prfile = require('./routes/api/prfile');
+const bodyParser = require('body-parser');
 // starting the app
 const db = require('./config/keys').mongoURI;
-const app = express();
 // connect to db
 mongoose.connect(db)
     .then(db => console.log('data base connected'))
     .catch(err => console.log(err));
 
+
+const app = express();
+// middleware
+ app.use(bodyParser.json());
+ app.use(bodyParser.urlencoded({extended: false}))
 
 // routes
 app.use('/api/users',user);
