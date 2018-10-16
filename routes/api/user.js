@@ -2,6 +2,8 @@ const express = require('express');
 const gravatar = require('gravatar');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const passport = require('passport');
+
 // user model
 const User = require('../../models/User');
 const router = express.Router();
@@ -90,6 +92,7 @@ router.post('/login', (req, res,) => {
                 .then(isMatch => {
                     if (isMatch) {
                         // user matched
+                        // jwt paylaod
                         const payload = {
                             id: user._id,
                             name: user.name,
@@ -124,5 +127,21 @@ router.post('/login', (req, res,) => {
             })
     })
 })
+
+/*
+* @route POST api/user/current
+* @desc  retrun current user
+* @access private
+* */
+
+router.get('/current', passport.authenticate('jwt', {session: false}), (req, res, next) => {
+
+    const {name, email, id} = req.user;
+    res.json({
+        message: 'success',
+        user: {id, name, email}
+    })
+});
+
 
 module.exports = router;
