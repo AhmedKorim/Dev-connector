@@ -1,6 +1,10 @@
+import PropTypes from 'prop-types'
 import React from 'react';
-import axios from "axios";
 import classnames from 'classnames';
+import {withRouter} from "react-router-dom";
+import {registerUser} from "../../store/actions/authActions";
+import {connect} from 'react-redux';
+import TextField from "../UI/TextField/TextField";
 
 class Register extends React.Component {
     state = {
@@ -23,27 +27,29 @@ class Register extends React.Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        console.log(this.state.controllers);
-        console.log('sending request');
-        axios.post('/api/users/register', this.state.controllers)
-            .then(res => console.log(res.data))
-            .catch(err => {
-                console.log(err.response.data.errors);
-                this.setState({errors: err.response.data.errors})
-                console.log(this.state);
-            })
+        this.props.register(this.state.controllers,this.props.history);
+    }
+
+
+    componentDidMount() {
+        if(this.props.isAuthenticated){
+            this.props.history.push('/dashboard')
+        }
     }
 
     render() {
         const {
             state: {
                 controllers,
+
+            },
+            props: {
                 errors: {
                     name,
                     email,
                     password,
                     password2
-                },
+                }
             },
             handleChange, handleSubmit
         } = this;
@@ -55,43 +61,38 @@ class Register extends React.Component {
                             <h1 className="display-4 text-center">Sign Up</h1>
                             <p className="lead text-center">Create your DevConnector account</p>
                             <form noValidate onSubmit={handleSubmit}>
-                                <div className="form-group">
-                                    <input type="text" className={classnames("form-control form-control-lg",
-                                        {
-                                            "is-invalid": name
-                                        })} placeholder="Name" onChange={e => handleChange(e, "name")}
-                                           value={controllers.name} name="name"
-                                    />
-                                    {name && <div className="invalid-feedback">{name}</div>}
-                                </div>
-                                <div className="form-group">
-                                    <input type="email" className={classnames("form-control form-control-lg",
-                                        {
-                                            "is-invalid": email
-                                        })} placeholder="Email Address"
-                                           onChange={e => handleChange(e, "email")} value={controllers.email}
-                                           name="email"/>
-                                    <small className="form-text text-muted">This site uses Gravatar so if you want a profile image, use a Gravatar email</small>
-                                    {email && <div className="invalid-feedback">{email}</div>}
-                                </div>
-                                <div className="form-group">
-                                    <input type="password" autoComplete="on" className={classnames("form-control form-control-lg",
-                                        {
-                                            "is-invalid": password
-                                        })} placeholder="Password"
-                                           onChange={e => handleChange(e, "password")} value={controllers.password}
-                                           name="password"/>
-                                    {password && <div className="invalid-feedback">{password}</div>}
-                                </div>
-                                <div className="form-group">
-                                    <input type="password" autoComplete="on" className={classnames("form-control form-control-lg",
-                                        {
-                                            "is-invalid": password2
-                                        })} placeholder="Confirm Password"
-                                           onChange={e => handleChange(e, "password2")} value={controllers.password2}
-                                           name="password2"/>
-                                    {password2 && <div className="invalid-feedback">{password2}</div>}
-                                </div>
+                                <TextField
+                                    error={name}
+                                    label="name"
+                                    value={controllers.name}
+                                    name="name"
+                                    type="text"
+                                    placeholder="Name"
+                                />
+                                <TextField
+                                    error={email}
+                                    label="email"
+                                    value={controllers.email}
+                                    name="name"
+                                    type="email"
+                                    info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
+                                    placeholder="Name"
+                                />
+                                <TextField
+                                    error={password}
+                                    label="password"
+                                    value={controllers.password}
+                                    name="password"
+                                    type="password"
+                                    placeholder="password"
+                                />   <TextField
+                                    error={password2}
+                                    label="confirm password"
+                                    value={controllers.password2}
+                                    name="password2"
+                                    type="password"
+                                    placeholder="confirm password"
+                                />
                                 <input type="submit" className="btn btn-info btn-block mt-4"/>
                             </form>
                         </div>
@@ -102,4 +103,24 @@ class Register extends React.Component {
     }
 }
 
-export default Register;
+const mapsStateToProps = state => {
+    return {
+        errors: state.errors.errors,
+        isAuthenticated:state.auth.isAuthenticated
+    }
+}
+const mapDispatchToProps = dispatch => {
+    return {
+        register: (userData,history) => dispatch(registerUser(userData,history))
+    }
+
+}
+
+Register.propTypes = {
+    register: PropTypes.func.isRequired,
+    errors:PropTypes.object.isRequired,
+    isAuthenticated:PropTypes.bool.isRequired,
+}
+
+export default withRouter(connect(mapsStateToProps, mapDispatchToProps)(Register));
+

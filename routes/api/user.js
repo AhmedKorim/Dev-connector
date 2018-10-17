@@ -58,10 +58,10 @@ router.post('/register', (req, res, next) => {
                         if (err) throw err;
                         newUser.password = hash;
                         newUser.save()
-                            .then(({name,avatar,email}) => {
+                            .then(({name, avatar, email}) => {
                                 res.status(200)
                                     .json({
-                                        user: {name,avatar,email}
+                                        user: {name, avatar, email}
                                     })
                             })
                             .catch(err => console.log(err)
@@ -94,18 +94,19 @@ router.post('/login', (req, res,) => {
         return res.status(400)
             .json({
                 message: "login failed",
-                error: errors
+                errors: errors
             })
     }
     User.findOne({email})
         .then(user => {
             // if user is there
+
             if (!user) {
                 errors.email = "Email not found"
                 return res.status(404)
                     .json({
                         message: "Email not found",
-                        error: errors
+                        errors: errors
                     })
             }
             // check the password
@@ -119,7 +120,8 @@ router.post('/login', (req, res,) => {
                             id: user.id,
                             name: user.name,
                             email: user.email,
-                            avatar: user.avatar
+                            avatar: user.avatar,
+                            expTimeout :3600 * 3
                         }
                         // token
                         jwt.sign(payload,
@@ -147,7 +149,7 @@ router.post('/login', (req, res,) => {
         console.log(err);
         res.status(500)
             .json({
-                message: "Failed to look up that email server error"
+                errors: "Failed to look up that email server error"
             })
     })
 })
