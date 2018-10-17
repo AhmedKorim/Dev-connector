@@ -4,7 +4,9 @@
   "description": "",
   "main": "server.js",
   "scripts": {
-    "start": "nodemon --inspect server.js "
+    "start": "nodemon --inspect server.js --ignore client ",
+    "client-install": "npm install --prefix client",
+    "start-client": "npm start --prefix client"
   },
   "keywords": [],
   "author": "",
