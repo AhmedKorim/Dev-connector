@@ -1,7 +1,6 @@
+import propTypes from 'prop-types';
 import React from 'react';
 import {connect} from 'react-redux';
-import propTypes from 'prop-types';
-import classnames from 'classnames';
 import {loginUser} from "../../store/actions/authActions";
 import TextField from "../UI/TextField/TextField";
 

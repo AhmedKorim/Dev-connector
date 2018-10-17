@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types'
-import {connect} from "react-redux";
 import React from 'react';
+import {connect} from "react-redux";
 import {NavLink} from "react-router-dom";
 import {logoutUser} from "../../store/actions/authActions";
 
@@ -74,6 +74,7 @@ const mapsTateToProps = state => {
         auth: state.auth
     }
 }
+
 export default connect(mapsTateToProps, {logoutUser})(Navbar);
 
 Navbar.propTypes = {

@@ -1,9 +1,8 @@
 import PropTypes from 'prop-types'
 import React from 'react';
-import classnames from 'classnames';
+import {connect} from 'react-redux';
 import {withRouter} from "react-router-dom";
 import {registerUser} from "../../store/actions/authActions";
-import {connect} from 'react-redux';
 import TextField from "../UI/TextField/TextField";
 
 class Register extends React.Component {
@@ -27,12 +26,12 @@ class Register extends React.Component {
     }
     handleSubmit = (e) => {
         e.preventDefault();
-        this.props.register(this.state.controllers,this.props.history);
+        this.props.register(this.state.controllers, this.props.history);
     }
 
 
     componentDidMount() {
-        if(this.props.isAuthenticated){
+        if (this.props.isAuthenticated) {
             this.props.history.push('/dashboard')
         }
     }
@@ -85,14 +84,14 @@ class Register extends React.Component {
                                     name="password"
                                     type="password"
                                     placeholder="password"
-                                />   <TextField
-                                    error={password2}
-                                    label="confirm password"
-                                    value={controllers.password2}
-                                    name="password2"
-                                    type="password"
-                                    placeholder="confirm password"
-                                />
+                                /> <TextField
+                                error={password2}
+                                label="confirm password"
+                                value={controllers.password2}
+                                name="password2"
+                                type="password"
+                                placeholder="confirm password"
+                            />
                                 <input type="submit" className="btn btn-info btn-block mt-4"/>
                             </form>
                         </div>
@@ -106,20 +105,20 @@ class Register extends React.Component {
 const mapsStateToProps = state => {
     return {
         errors: state.errors.errors,
-        isAuthenticated:state.auth.isAuthenticated
+        isAuthenticated: state.auth.isAuthenticated
     }
 }
 const mapDispatchToProps = dispatch => {
     return {
-        register: (userData,history) => dispatch(registerUser(userData,history))
+        register: (userData, history) => dispatch(registerUser(userData, history))
     }
 
 }
 
 Register.propTypes = {
     register: PropTypes.func.isRequired,
-    errors:PropTypes.object.isRequired,
-    isAuthenticated:PropTypes.bool.isRequired,
+    errors: PropTypes.object.isRequired,
+    isAuthenticated: PropTypes.bool.isRequired,
 }
 
 export default withRouter(connect(mapsStateToProps, mapDispatchToProps)(Register));

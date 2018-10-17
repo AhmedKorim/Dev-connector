@@ -11,6 +11,7 @@ import store from '../store/store';
 import './App.css';
 import {logoutUser, setCurrentUser} from "../store/actions/authActions";
 import setAuthToken from "../utils/setAuthToken";
+import Dashboard from "./Dashboard/Dashboard";
 
 
 class App extends Component {
@@ -54,6 +55,10 @@ class App extends Component {
                             path="/login"
                             exact
                             component={Login}
+                        /><Route
+                            path="/dashboard"
+                            exact
+                            component={Dashboard}
                         />
                     </div>
                 </main>

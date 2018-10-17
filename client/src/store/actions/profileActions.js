@@ -1,5 +1,5 @@
 import axios from 'axios';
-import {GET_PROFILE, PROFILE_LOADING} from "./actionsTypes";
+import {CLEAR_CURRENT_PROFILE, GET_PROFILE, PROFILE_LOADING} from "./actionsTypes";
 import {setErrors} from "./errorsActions";
 
 // actionCreator
@@ -9,6 +9,11 @@ export const setProfileLoading = loading => {
     return {
         type: PROFILE_LOADING,
         payload: loading
+    }
+}
+export const clearCurrentProfile = _ => {
+    return {
+        type: CLEAR_CURRENT_PROFILE,
     }
 }
 

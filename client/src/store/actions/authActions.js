@@ -1,10 +1,9 @@
 import axios from 'axios';
 import jwt_deoce from "jwt-decode";
 import setAuthToken from "../../utils/setAuthToken";
-import {SET_CURRENT_USER, SET_ERRORS} from "./actionsTypes";
+import {SET_CURRENT_USER} from "./actionsTypes";
 import {setErrors} from "./errorsActions";
-
-
+import {clearCurrentProfile} from "./profileActions";
 
 
 export const setCurrentUser = userDate => {
@@ -41,7 +40,7 @@ export const loginUser = (userData, history) => dispatch => {
             // extract user info from the token || get it from the response
             if (token) {
                 const decodedData = jwt_deoce(token);
-               dispatch(setCurrentUser(decodedData));
+                dispatch(setCurrentUser(decodedData));
             }
         })
         .catch(error => {
@@ -49,11 +48,12 @@ export const loginUser = (userData, history) => dispatch => {
         })
 }
 
-export const logoutUser = _ => dispatch =>{
+export const logoutUser = _ => dispatch => {
     // remove the token
     localStorage.removeItem('jwtToken');
     // remove auth header for future request
     setAuthToken(false);
     //set current user to {} to set isAuthenticated to false
     dispatch(setCurrentUser({}));
+    dispatch(clearCurrentProfile());
 }
