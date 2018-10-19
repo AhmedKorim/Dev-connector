@@ -12,6 +12,7 @@ import store from '../store/store';
 import setAuthToken from "../utils/setAuthToken";
 import './App.css';
 import CreateProfile from "./CreateProfile/CreateProfile";
+import AddExperiance from "./Dashboard/AddCreditionals/AddExperiance";
 import Dashboard from "./Dashboard/Dashboard";
 import EditProfile from "./EditProfile/EditProfile";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
@@ -77,7 +78,11 @@ class App extends Component {
                                 path="/edit-profile"
                                 exact
                                 component={EditProfile}
-                            />
+                            /> <PrivateRoute
+                            path="/add-experience"
+                            exact
+                            component={AddExperiance}
+                        />
                         </Switch>
                     </div>
                 </main>

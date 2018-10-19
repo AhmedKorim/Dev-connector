@@ -113,8 +113,7 @@ class EditProfile extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
-                            <h1 className="display-4 text-center">create you profile</h1>
-                            <p className="lead text-center"> let's get some information to make your profile stand out</p>
+                            <h1 className="display-4 text-center">edit profile</h1>
                             <small className="d-block pb-3">* =required fields</small>
                             <form onSubmit={submitHandler}>
                                 <TextField
@@ -224,7 +223,7 @@ class EditProfile extends React.Component {
                                     />
                                     </div>
                                 }
-                                <button className="btn btn-info btn-block-mt-4" type="submit">Create Profile</button>
+                                <button className="btn btn-info btn-block-mt-4" type="submit">Edit Profile</button>
                             </form>
                         </div>
                     </div>
