@@ -105,13 +105,14 @@ router.get("/user/:user_id", (req, res, next) => {
 router.get('/', passport.authenticate("jwt", {session: false}), (req, res, next) => {
     const user = req.user;
     const errors = {};
+
     Profile.findOne({user: user.id})
         .populate("User", ['name', "avatar"])
         .then(profile => {
             if (!profile) {
                 errors.noProfile = "there is no profile for this user";
                 return res.status(404)
-                    .json(errors)
+                    .json({errors})
             }
             res.json({profile})
         })
@@ -128,9 +129,9 @@ router.get('/', passport.authenticate("jwt", {session: false}), (req, res, next)
 
 router.post('/', passport.authenticate("jwt", {session: false}), (req, res, next) => {
     //getting all fields
+
     const profileFields = {}
     const {errors, isValid} = validateProfileInput(req.body);
-
     if (!isValid) {
         return res.status(400)
             .json(errors)
@@ -169,7 +170,6 @@ router.post('/', passport.authenticate("jwt", {session: false}), (req, res, next
 
     Profile.findOne({user: req.user.id})
         .then(profile => {
-
             if (profile) {
                 Profile.findOneAndUpdate({user: req.user.id},
                     {$set: profileFields},
@@ -191,10 +191,13 @@ router.post('/', passport.authenticate("jwt", {session: false}), (req, res, next
                             .then(profile => {
                                 return res.status(200).json(profile);
                             })
-                            .catch(err => res.json(err))
+                            .catch(err => res.status(500).json({errors: "err"}))
                     })
             }
         })
+        .catch(error =>
+            console.log(error)
+        )
 
 })
 

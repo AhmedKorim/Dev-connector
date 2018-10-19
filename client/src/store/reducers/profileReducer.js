@@ -16,7 +16,7 @@ const profileReducer = (state = initialState, action) => {
         case GET_PROFILE:
             return {
                 ...state,
-                profile: action.payload
+                profile: action.payload.profile
 
             }
         case CLEAR_CURRENT_PROFILE:

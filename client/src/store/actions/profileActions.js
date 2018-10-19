@@ -29,11 +29,35 @@ export const getCurrentProfile = _ => dispatch => {
             })
         })
         .catch(error => {
-            dispatch(setProfileLoading(false));
-            dispatch({
-                type: GET_PROFILE,
-                payload: {}
-            })
-            dispatch(setErrors(error.response.data.errors))
+            if (error.response) {
+
+                dispatch(setProfileLoading(false));
+
+                if (error.response.data === "Unauthorized") {
+                    dispatch({
+                        type: GET_PROFILE,
+                        payload: null
+                    })
+                    dispatch(setErrors({unauthorized: "Unauthorized"}));
+                } else {
+                    dispatch({
+                        type: GET_PROFILE,
+                        payload: {}
+                    })
+                    dispatch(setErrors(error.response.data.errors));
+                }
+
+            }
+
         })
+}
+
+// create poriflee
+export const createProfile = (profileData, history) => dispatch => {
+
+    axios.post('/api/profile', profileData)
+        .then(res => {
+            history.push('/dashboard');
+        })
+        .catch(err => dispatch(setErrors(err.response.data)))
 }

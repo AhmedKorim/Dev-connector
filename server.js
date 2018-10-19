@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-
+const morgan =require('morgan');
 
 // routes files
 const user = require('./routes/api/user');
@@ -20,16 +20,20 @@ mongoose.connect(db)
 
 // string app
 const app = express();
+
+
 // middleware body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))
 // passport middleware
+
 app.use(passport.initialize());
 
 // passport config
 require('./config/passport')(passport);
 
-
+// logging requests
+app.use(morgan('dev'));
 // routes
 app.use('/api/users', user);
 app.use('/api/profile', prfile);

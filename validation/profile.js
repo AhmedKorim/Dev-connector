@@ -2,7 +2,7 @@ const validator = require('validator');
 const isEmpty = require('./isEmpty');
 
 module.exports = ({
-                      handel,
+                      handle,
                       company,
                       website,
                       location,
@@ -16,27 +16,34 @@ module.exports = ({
                       instagram,
                   }) => {
     let errors = {};
+
     // it wont be empty if the user didn't send it
-    handel = !isEmpty(handel) ? handel : "";
+    handle = !isEmpty(handle) ? handle : "";
     company = !isEmpty(company) ? company : "";
     website = !isEmpty(website) ? website : "";
-    location = !isEmpty(location) ? location : "";
-    bio = !isEmpty(bio) ? bio : "";
     status = !isEmpty(status) ? status : "";
     githubUsername = !isEmpty(githubUsername) ? githubUsername : "";
     youtube = !isEmpty(youtube) ? youtube : "";
     twitter = !isEmpty(twitter) ? twitter : "";
     facebook = !isEmpty(facebook) ? facebook : "";
     instagram = !isEmpty(instagram) ? instagram : "";
-    //handel validation
+    skills = !isEmpty(skills) ? skills : "";
+    //handle validation
 
- /*   if (validator.isEmpty(handel)) {
-        errors.handel = "handel is required"
-    } else if (validator.isLength({min: 2, max: 40})) {
-        errors.handel = "handel should be batten 2 and 40 characters"
-    }*/
+
+    /*   if (validator.isEmpty(handle)) {
+           errors.handle = "handle is required"
+       } else if (validator.isLength({min: 2, max: 40})) {
+           errors.handle = "handle should be batten 2 and 40 characters"
+       }*/
     //company validation
+    if (validator.isEmpty(handle)) {
+        errors.handle = "handle cannot be empty"
+    }
+
+
     //website validation
+
     if (!validator.isEmpty(website)) {
         if (!validator.isURL(website)) {
             errors.website = "please enter valid URL"
@@ -55,9 +62,10 @@ module.exports = ({
 
     //status validation
 
-    if (validator.isEmpty(status)) {
+    if (validator.isEmpty(status) || status == 0) {
         errors.status = "status is required"
     }
+
     //githubUsername validation
     if (!validator.isEmpty(githubUsername)) {
         if (!validator.isURL(githubUsername)) {
