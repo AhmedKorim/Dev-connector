@@ -4,16 +4,17 @@ import {connect} from "react-redux";
 import {Link, withRouter} from "react-router-dom";
 import TextArea from "../../../components/UI/TextArea/TextArea";
 import TextField from "../../../components/UI/TextField/TextField";
+import {addExperience} from "../../../store/actions/profileActions";
 
-class AddExperiance extends React.Component {
+class AddExperience extends React.Component {
     state = {
         controllers: {
             company: "",
             title: "",
             location: "",
             from: "",
-            to: "",
-            current: "",
+            to: Date.now(),
+            current: false,
             description: "",
         },
         errors: {},
@@ -22,8 +23,8 @@ class AddExperiance extends React.Component {
 
     handleSubmit = e => {
         e.preventDefault();
+        this.props.addExperience(this.state.controllers, this.props.history)
     }
-
     handleChange = ({target: {value}}, target) => {
         console.log(value);
         this.setState({
@@ -33,7 +34,6 @@ class AddExperiance extends React.Component {
             }
         })
     }
-
     handleCheck = (e, target) => {
         this.setState(prevState => ({
             disabled: !prevState.disabled,
@@ -46,6 +46,12 @@ class AddExperiance extends React.Component {
         console.log(e.target.checked);
     }
 
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.errors) {
+            this.setState({errors: nextProps.errors})
+        }
+
+    }
 
     render() {
         const {
@@ -70,7 +76,8 @@ class AddExperiance extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
-                            <Link to="/dashboard" classname="btn btn-light">Go back</Link>
+                            <Link to="/dashboard" className="btn btn-light">Go back</Link>
+
                             <h1 className="display-4 text-center">Add experience</h1>
                             <p className="lead">Add any job or position you had in the past or current</p>
                             <small className="d-block mb-3">*=Required fields</small>
@@ -139,18 +146,21 @@ class AddExperiance extends React.Component {
     }
 }
 
-const mapDispatchToProps = state => {
-    return {}
+const mapDispatchToProps = dispatch => {
+    return {
+        addExperience: (expData, history) => dispatch(addExperience(expData, history))
+    }
 }
 const mapStateToProps = state => {
     return {
         profile: state.profile.profile,
-        errors: state.errors
+        errors: state.errors.errors
     }
 }
-export default withRouter(connect(mapStateToProps)(AddExperiance));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(AddExperience));
 
-AddExperiance.propTypes = {
+AddExperience.propTypes = {
     profile: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
+    addExperience: PropTypes.func.isRequired,
 }

@@ -62,6 +62,32 @@ export const createProfile = (profileData, history) => dispatch => {
         })
         .catch(err => dispatch(setErrors(err.response.data)))
 }
+
+// add exp
+export const addExperience = (expData, history) => dispatch => {
+    axios
+        .post('/api/profile/experience', expData)
+        .then(res => {
+            history.push('/dashboard')
+        })
+        .catch(err => {
+            dispatch(setErrors(err.response.data.errors));
+        })
+}
+
+// add exp
+export const addEducation = (eduData, history) => dispatch => {
+    axios
+        .post('/api/profile/education', eduData)
+        .then(res => {
+            history.push('/dashboard')
+        })
+        .catch(err => {
+            dispatch(setErrors(err.response.data.errors));
+        })
+}
+
+
 // delete account
 export const deleteAccount = _ => dispatch => {
     if (window.confirm('Are you sure this cannot be undone ?')) {
