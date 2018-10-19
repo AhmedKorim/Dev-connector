@@ -13,7 +13,7 @@ class AddExperience extends React.Component {
             title: "",
             location: "",
             from: "",
-            to: Date.now(),
+            to: "",
             current: false,
             description: "",
         },
@@ -77,7 +77,6 @@ class AddExperience extends React.Component {
                     <div className="row">
                         <div className="col-md-8 m-auto">
                             <Link to="/dashboard" className="btn btn-light">Go back</Link>
-
                             <h1 className="display-4 text-center">Add experience</h1>
                             <p className="lead">Add any job or position you had in the past or current</p>
                             <small className="d-block mb-3">*=Required fields</small>

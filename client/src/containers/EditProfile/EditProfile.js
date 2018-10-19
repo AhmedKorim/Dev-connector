@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types'
 import React from 'react';
 import {connect} from "react-redux";
-import {withRouter} from "react-router-dom";
+import {Link, withRouter} from "react-router-dom";
 import InputGroup from "../../components/UI/InputGoup/InputGroup";
 import SelectInput from "../../components/UI/SelectInput/SelectInput";
 import TextArea from "../../components/UI/TextArea/TextArea";
@@ -113,6 +113,8 @@ class EditProfile extends React.Component {
                 <div className="container">
                     <div className="row">
                         <div className="col-md-8 m-auto">
+                            <Link to="/dashboard" className="btn btn-light">Go back</Link>
+
                             <h1 className="display-4 text-center">edit profile</h1>
                             <small className="d-block pb-3">* =required fields</small>
                             <form onSubmit={submitHandler}>

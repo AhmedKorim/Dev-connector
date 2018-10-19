@@ -4,3 +4,5 @@
 /package-lock.json
 /theme/
 /bash.exe.stackdump
+!/client/public/bootstrap.css
+/client/public/bootstrap.css

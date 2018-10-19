@@ -6,6 +6,8 @@ import Spinner from "../../components/UI/spinner";
 import {deleteAccount, getCurrentProfile} from "../../store/actions/profileActions";
 import isEmpty from "../../utils/isEmpty";
 import DashboardActions from "./DashboardActions";
+import EduWrapper from "./EduWrapper";
+import ExpWrapper from "./ExpWrapper";
 
 class Dashboard extends React.Component {
 
@@ -41,6 +43,8 @@ class Dashboard extends React.Component {
                                 : user && !isEmpty(profile) ? <div>
                                     <p className="lead">welcome<Link to={`/profile/`}> {user.name}</Link></p>
                                     <DashboardActions/>
+                                    {profile.experience.length > 0 && <ExpWrapper experience={profile.experience}/>}
+                                    {profile.education.length > 0 && <EduWrapper education={profile.education}/>}
                                     {/* TODO EXP AND EDU*/}
                                     <div style={{marginBottom: 60}}/>
                                     <button className="btn btn-danger text-capitalize" onClick={deleteHandler}>delete account</button>
@@ -61,6 +65,7 @@ const mapStateToProps = state => {
         errors: state.errors.errors
     }
 }
+
 export default connect(mapStateToProps, {getCurrentProfile, deleteAccount})(Dashboard);
 
 Dashboard.propTypes = {

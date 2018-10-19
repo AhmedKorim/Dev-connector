@@ -19,7 +19,7 @@ export const clearCurrentProfile = _ => {
 }
 
 // get current profile
-export const getCurrentProfile = _ => dispatch => {
+export const    getCurrentProfile = _ => dispatch => {
     dispatch(setProfileLoading(true));
     axios.get('/api/profile')
         .then(res => {
@@ -84,6 +84,34 @@ export const addEducation = (eduData, history) => dispatch => {
         })
         .catch(err => {
             dispatch(setErrors(err.response.data.errors));
+        })
+}
+
+// delete exp
+export const deleteExperience = id => dispatch => {
+    axios.delete('/api/profile/experience/' + id)
+        .then(res => {
+            dispatch({
+                type: GET_PROFILE,
+                payload: res.data
+            })
+        })
+        .catch(er => {
+            dispatch(setErrors(er.response.data.errors))
+        })
+}
+
+// delete exp
+export const deleteEducation = id => dispatch => {
+    axios.delete('/api/profile/education/' + id)
+        .then(res => {
+            dispatch({
+                type: GET_PROFILE,
+                payload: res.data
+            })
+        })
+        .catch(er => {
+            dispatch(setErrors(er.response.data.errors))
         })
 }
 
