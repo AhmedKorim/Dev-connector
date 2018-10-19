@@ -13,6 +13,7 @@ import setAuthToken from "../utils/setAuthToken";
 import './App.css';
 import CreateProfile from "./CreateProfile/CreateProfile";
 import Dashboard from "./Dashboard/Dashboard";
+import EditProfile from "./EditProfile/EditProfile";
 import PrivateRoute from "./PrivateRoute/PrivateRoute";
 
 
@@ -71,6 +72,11 @@ class App extends Component {
                                 path="/create-profile"
                                 exact
                                 component={CreateProfile}
+                            />
+                            <PrivateRoute
+                                path="/edit-profile"
+                                exact
+                                component={EditProfile}
                             />
                         </Switch>
                     </div>

@@ -66,19 +66,22 @@ class Register extends React.Component {
                                     value={controllers.name}
                                     name="name"
                                     type="text"
+                                    onChange={handleChange}
                                     placeholder="Name"
                                 />
                                 <TextField
                                     error={email}
                                     label="email"
                                     value={controllers.email}
-                                    name="name"
+                                    name="email"
                                     type="email"
+                                    onChange={handleChange}
                                     info="This site uses Gravatar so if you want a profile image, use a Gravatar email"
-                                    placeholder="Name"
+                                    placeholder="email"
                                 />
                                 <TextField
                                     error={password}
+                                    onChange={handleChange}
                                     label="password"
                                     value={controllers.password}
                                     name="password"
@@ -86,7 +89,8 @@ class Register extends React.Component {
                                     placeholder="password"
                                 /> <TextField
                                 error={password2}
-                                label="confirm password"
+                                label="confirm password" onChange={handleChange}
+                                onChange={handleChange}
                                 value={controllers.password2}
                                 name="password2"
                                 type="password"

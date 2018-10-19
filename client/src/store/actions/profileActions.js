@@ -1,5 +1,6 @@
 import axios from 'axios';
 import {CLEAR_CURRENT_PROFILE, GET_PROFILE, PROFILE_LOADING} from "./actionsTypes";
+import {setCurrentUser} from "./authActions";
 import {setErrors} from "./errorsActions";
 
 // actionCreator
@@ -36,13 +37,13 @@ export const getCurrentProfile = _ => dispatch => {
                 if (error.response.data === "Unauthorized") {
                     dispatch({
                         type: GET_PROFILE,
-                        payload: null
+                        payload: {profile: null}
                     })
                     dispatch(setErrors({unauthorized: "Unauthorized"}));
                 } else {
                     dispatch({
                         type: GET_PROFILE,
-                        payload: {}
+                        payload: {profile: {}}
                     })
                     dispatch(setErrors(error.response.data.errors));
                 }
@@ -60,4 +61,15 @@ export const createProfile = (profileData, history) => dispatch => {
             history.push('/dashboard');
         })
         .catch(err => dispatch(setErrors(err.response.data)))
+}
+// delete account
+export const deleteAccount = _ => dispatch => {
+    if (window.confirm('Are you sure this cannot be undone ?')) {
+        axios.delete('/api/profile')
+            .then(res =>
+                dispatch(setCurrentUser({}))
+            ).catch(err => {
+            dispatch(setErrors(err.response.data.errors))
+        })
+    }
 }

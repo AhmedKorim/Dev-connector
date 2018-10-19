@@ -6,7 +6,7 @@ import InputGroup from "../../components/UI/InputGoup/InputGroup";
 import SelectInput from "../../components/UI/SelectInput/SelectInput";
 import TextArea from "../../components/UI/TextArea/TextArea";
 import TextField from "../../components/UI/TextField/TextField";
-import {createProfile} from "../../store/actions/profileActions";
+import {createProfile, getCurrentProfile} from "../../store/actions/profileActions";
 
 const options = [
     {label: "* select professional status", value: 0},
@@ -20,7 +20,7 @@ const options = [
     {label: "Other", value: "Other"},
 ]
 
-class CreateProfile extends React.Component {
+class EditProfile extends React.Component {
     state = {
         displaySocialInputs: false,
         controllers: {
@@ -59,6 +59,19 @@ class CreateProfile extends React.Component {
         this.setState(prevState => ({
             displaySocialInputs: !prevState.displaySocialInputs
         }))
+    }
+
+    componentDidMount() {
+        this.props.getCurrentProfile();
+        const newControllers = {};
+        for (const key in this.state.controllers) {
+            if (key !== 'skills') {
+                newControllers[key] = this.props.profile[key];
+            } else {
+                newControllers[key] = this.props.profile[key].join(",");
+            }
+        }
+        this.setState({controllers: newControllers});
     }
 
 
@@ -222,16 +235,18 @@ class CreateProfile extends React.Component {
 }
 
 const mapStateToProps = state => ({
-    profile: state.profile,
+    profile: state.profile.profile,
     errors: state.errors.errors
 })
 const mapDispatchToProps = dispatch => ({
-    createProfile: (profileData, history) => dispatch(createProfile(profileData, history))
+    createProfile: (profileData, history) => dispatch(createProfile(profileData, history)),
+    getCurrentProfile: () => dispatch(getCurrentProfile())
 })
-export default withRouter(connect(mapStateToProps, mapDispatchToProps)(CreateProfile));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(EditProfile));
 
-CreateProfile.propTypes = {
+EditProfile.propTypes = {
     profile: PropTypes.object.isRequired,
     errors: PropTypes.object.isRequired,
-    createProfile: PropTypes.func.isRequired
+    createProfile: PropTypes.func.isRequired,
+    getCurrentProfile: PropTypes.func.isRequired
 }

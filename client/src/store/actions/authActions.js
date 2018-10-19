@@ -44,7 +44,9 @@ export const loginUser = (userData, history) => dispatch => {
             }
         })
         .catch(error => {
-            dispatch(setErrors(error.response.data.errors));
+            if (error.response) {
+                dispatch(setErrors(error.response.data.errors));
+            }
         })
 }
 

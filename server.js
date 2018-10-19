@@ -1,8 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const passport = require('passport');
-const morgan =require('morgan');
-
+const morgan = require('morgan');
+const cors = require('cors')
 // routes files
 const user = require('./routes/api/user');
 const post = require('./routes/api/post');
@@ -21,7 +21,15 @@ mongoose.connect(db)
 // string app
 const app = express();
 
-
+// cros
+app.use(cors());
+// handmade headrs
+app.use((req, res, next) => {
+    res.set({
+        "Access-Control-Allow-Origin": "http://localhost:3000"
+    })
+    next()
+})
 // middleware body Parser
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}))

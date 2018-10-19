@@ -338,7 +338,9 @@ router.delete('/', passport.authenticate('jwt', {session: false}), (req, res) =>
             } else {
                 res.status(400).json({message: 'failed to delete '})
             }
-        }).catch(_ => res.status(400).json({message: 'failed to delete '}))
+        }).catch(_ => res.status(400).json({
+        errors: {message: 'failed to delete '}
+    }))
 
 })
 
